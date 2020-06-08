@@ -28,6 +28,7 @@ def create_dataset(window_size):
     step = 1
     sentences = []
     next_chars = []
+    
     #z = 0
     #for i in range(0, len(text) - window_size + 1, step):
     #    sentences.append(text[i: i + window_size])
