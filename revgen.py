@@ -28,11 +28,6 @@ def create_dataset(window_size):
     step = 1
     sentences = []
     next_chars = []
-    #z = 0
-    #for i in range(0, len(text) - window_size + 1, step):
-    #    sentences.append(text[i: i + window_size])
-    #    next_chars.append(text[i + 1:i + 1 + window_size])
-    #print('nb sequences:', len(sentences))
 
     for reviews in text:
         #In the clean data part, the review length > 40
@@ -48,8 +43,6 @@ def create_dataset(window_size):
     for i, sentence in enumerate(sentences):
         for t, char in enumerate(sentence):
             X[i, t, char_indices[char]] = 1
-
-
     print(X.shape)
 
     for i, sentence in enumerate(next_chars):
@@ -72,7 +65,6 @@ def create_model(input_dimension,  epoch_num):
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
     print(model.summary())
 
-
     filepath = "fake_review.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
     callbacks_list = [checkpoint]
@@ -83,8 +75,6 @@ def create_model(input_dimension,  epoch_num):
     return model
 
 def generate_fake_review(seed_str, input_dimension,model,char_indices,indices_char,sentence_num):
-
-
     print("seed string -->", seed_str)
     print('The generated text is:')
 
@@ -101,7 +91,6 @@ def generate_fake_review(seed_str, input_dimension,model,char_indices,indices_ch
 
         preds = model.predict(x, verbose=0)[0]
 
-
         next_index = np.argmax(preds[len(seed_str) - 1])
         next_char = indices_char[next_index]
         seed_str = seed_str + next_char
@@ -116,9 +105,8 @@ def generate_fake_review(seed_str, input_dimension,model,char_indices,indices_ch
 
 
 if __name__ == '__main__':
-
     input_dimension, X, y, char_indices, indices_char = create_dataset(window_size=40)
-    #model = create_model(input_dimension, epoch_num= 5)
+    model = create_model(input_dimension, epoch_num= 5)
     model = load_model('fake_review.hdf5')
     fake_text = generate_fake_review('i love the sushi',input_dimension, model, char_indices, indices_char, 10)
 
